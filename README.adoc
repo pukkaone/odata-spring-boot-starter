@@ -1,0 +1,85 @@
+= OData Spring Boot Starter
+
+Convenient dependency descriptors to add OData to your application.
+
+
+== OData Elasticsearch Spring Boot Starter
+
+This adds an OData endpoint which reads data from Elasticsearch.
+
+
+=== Usage
+
+Add this dependency to your Maven project:
+[source,xml]
+----
+<dependency>
+  <groupId>com.github.pukkaone</groupId>
+  <artifactId>odata-elasticsearch2-spring-boot-starter</artifactId>
+  <version>${odata-spring-boot-starter.version}</version>
+</dependency>
+----
+
+Set these application properties:
+[source,yaml]
+----
+odata:
+  elasticsearch:
+    indices: COMMA_SEPARATED_LIST_OF_ALIAS_OR_INDEX_NAMES
+
+spring:
+  data:
+    elasticsearch:
+      cluster-name: CLUSTER_NAME
+      cluster-nodes: "NODE_HOST:NODE_PORT"
+----
+
+
+=== Application Properties
+
+Various properties can be specified inside your `application.properties` or `application.yml` file,
+or as command line switches.
+
+`odata.elasticsearch.indices`::
+Comma separated list of alias or index names to expose at OData endpoint. +
+Default: all aliases and indices are exposed
+
+`odata.web.service-parent-path`::
+OData service root URI will be
+`${server.context-path}${odata.web.service-parent-path}/` _alias_or_index_name_ +
+Default: `/odata`
+
+
+=== Translating Elasticsearch to Entity Data Model
+
+|===
+| Elasticsearch | Entity Data Model | Name
+
+| alias/index
+| Namespace
+| _alias_or_index_name_
+
+| alias/index
+| Schema
+| _Namespace_
+
+| alias/index
+| Entity Container
+| _alias_or_index_name_
+
+| type
+| Entity Set
+| _type_name_
+
+| type
+| Entity Type
+| _Namespace_ `.` _type_name_
+
+| nested
+| Collection(Complex Type)
+| _Namespace_ `.` _nested_name_
+
+| object
+| Complex Type
+| _Namespace_ `.` _object_name_
+|===

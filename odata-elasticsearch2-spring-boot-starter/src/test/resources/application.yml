@@ -1,0 +1,11 @@
+server:
+  context-path: /example
+  port: 0
+
+spring:
+  data:
+    elasticsearch:
+      properties:
+        node:
+          client: true
+          local: true

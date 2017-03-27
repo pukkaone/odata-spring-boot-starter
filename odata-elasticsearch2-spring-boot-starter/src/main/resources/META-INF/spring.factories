@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.github.pukkaone.odata.elasticsearch2.configuration.ODataElasticsearchAutoConfiguration
