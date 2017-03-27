@@ -1,0 +1,5 @@
+project.description = 'OData server endpoint starter'
+
+dependencies {
+  compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+}

@@ -1,0 +1,3 @@
+# Automatically detect text files. Convert line endings when checking out
+# and committing text files.
+* text=auto

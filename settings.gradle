@@ -1,0 +1,3 @@
+rootProject.name = 'odata-spring-boot-starter'
+include 'odata-elasticsearch2-spring-boot-starter'
+include 'odata-web-spring-boot-starter'
