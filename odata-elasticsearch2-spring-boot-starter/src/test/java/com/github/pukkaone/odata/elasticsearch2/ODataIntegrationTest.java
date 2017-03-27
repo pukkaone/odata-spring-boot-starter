@@ -45,6 +45,7 @@ public class ODataIntegrationTest {
   }
 
   private static final String INDEX_NAME = "example-index";
+  private static final String TYPE_NAME = "ExampleType";
 
   private static EmbeddedElasticsearchServer elasticsearchServer;
   private static ElasticsearchTemplate elasticsearchTemplate;
@@ -79,6 +80,26 @@ public class ODataIntegrationTest {
         .get();
   }
 
+  private static String indexDocument(String documentId, String documentFile) throws Exception {
+    String source = StreamUtils.copyToString(
+        ODataIntegrationTest.class.getResourceAsStream(documentFile),
+        StandardCharsets.UTF_8);
+
+    return elasticsearchTemplate.getClient()
+        .prepareIndex(INDEX_NAME, TYPE_NAME, documentId)
+        .setSource(source)
+        .get()
+        .getId();
+  }
+
+  private static void refresh(String indexName) {
+    elasticsearchTemplate.getClient()
+        .admin()
+        .indices()
+        .prepareRefresh(indexName)
+        .get();
+  }
+
   @BeforeClass
   public static void beforeClass() throws Exception {
     elasticsearchServer = new EmbeddedElasticsearchServer();
@@ -91,6 +112,10 @@ public class ODataIntegrationTest {
         StandardCharsets.UTF_8);
     createIndex(INDEX_NAME, mappings);
     waitForGreenStatus(INDEX_NAME);
+
+    indexDocument("entityId1", "entity1-source.json");
+
+    refresh(INDEX_NAME);
   }
 
   @AfterClass
@@ -124,5 +149,15 @@ public class ODataIntegrationTest {
     String expected = StreamUtils.copyToString(
         getClass().getResourceAsStream("metadata-expected.xml"), StandardCharsets.UTF_8);
     assertThat(metadata).isXmlEqualTo(expected);
+  }
+
+  @Test
+  public void should_read_entity() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType('entityId1')"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertEquals("entity1-expected.json", response.getBody());
   }
 }
