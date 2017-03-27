@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.olingo.commons.api.data.ComplexValue;
 import org.apache.olingo.commons.api.data.Entity;
+import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmComplexType;
@@ -21,11 +22,23 @@ import org.apache.olingo.commons.api.edm.EdmStructuredType;
 import org.apache.olingo.commons.api.edm.constants.EdmTypeKind;
 import org.apache.olingo.commons.api.edm.geo.Geospatial;
 import org.apache.olingo.commons.api.edm.geo.Point;
+import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmGeographyPoint;
+import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
+import org.apache.olingo.server.api.uri.queryoption.FilterOption;
+import org.apache.olingo.server.api.uri.queryoption.OrderByItem;
+import org.apache.olingo.server.api.uri.queryoption.expression.ExpressionVisitException;
+import org.apache.olingo.server.api.uri.queryoption.expression.Member;
+import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 
 /**
@@ -46,6 +59,10 @@ public class EntityRepository {
   }
 
   private static ComplexValue toComplexValue(EdmComplexType complexType, Map<String, Object> source) {
+    if (source == null) {
+      return null;
+    }
+
     if (source == null) {
       return null;
     }
@@ -217,5 +234,75 @@ public class EntityRepository {
         .getSource();
 
     return toEntity(entitySet, entityId, source);
+  }
+
+  private static QueryBuilder toQueryBuilder(FilterOption filterOption)
+      throws ODataApplicationException {
+
+    if (filterOption == null) {
+      return QueryBuilders.matchAllQuery();
+    }
+
+    try {
+      return (QueryBuilder) filterOption.getExpression()
+          .accept(new ElasticsearchExpressionVisitor());
+    } catch (ExpressionVisitException e) {
+      throw new ODataApplicationException(
+          "accept failed", HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), null, e);
+    }
+  }
+
+  private static void configureSorting(UriInfo uriInfo, SearchRequestBuilder searchRequest) {
+    if (uriInfo.getOrderByOption() == null) {
+      return;
+    }
+
+    for (OrderByItem orderByItem : uriInfo.getOrderByOption().getOrders()) {
+      searchRequest.addSort(
+          MemberMapper.toFieldName((Member) orderByItem.getExpression()),
+          orderByItem.isDescending() ? SortOrder.DESC : SortOrder.ASC);
+    }
+  }
+
+  private static void configurePaging(UriInfo uriInfo, SearchRequestBuilder searchRequest) {
+    int skip = (uriInfo.getSkipOption() == null) ? 0 : uriInfo.getSkipOption().getValue();
+    searchRequest.setFrom(skip);
+
+    int top = (uriInfo.getTopOption() == null) ? 20 : uriInfo.getTopOption().getValue();
+    searchRequest.setSize(top);
+  }
+
+  /**
+   * Reads multiple instances of an Entity Type.
+   *
+   * @param entitySet
+   *     Entity Set to read from
+   * @param uriInfo
+   *     contains filter, order by and paging arguments
+   * @return entities
+   * @throws ODataApplicationException
+   *     if error occurred handling filter option
+   */
+  public EntityCollection list(EdmEntitySet entitySet, UriInfo uriInfo)
+      throws ODataApplicationException {
+
+    SearchRequestBuilder searchRequest = elasticsearchTemplate.getClient()
+        .prepareSearch(toIndexName(entitySet))
+        .setTypes(toTypeName(entitySet))
+        .setQuery(toQueryBuilder(uriInfo.getFilterOption()));
+
+    configureSorting(uriInfo, searchRequest);
+    configurePaging(uriInfo, searchRequest);
+
+    SearchResponse response = searchRequest.execute().actionGet();
+
+    EntityCollection entityCollection = new EntityCollection();
+    List<Entity> entities = entityCollection.getEntities();
+    response.getHits().forEach(hit -> {
+      Entity entity = toEntity(entitySet, hit.getId(), hit.getSource());
+      entities.add(entity);
+    });
+
+    return entityCollection;
   }
 }

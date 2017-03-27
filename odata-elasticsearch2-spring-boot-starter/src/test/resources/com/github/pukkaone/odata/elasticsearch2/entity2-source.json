@@ -1,0 +1,6 @@
+{
+  "integerProperty": 20,
+  "longProperty": 50,
+  "keywordProperty": "alpha bravo",
+  "textProperty": "charlie delta"
+}

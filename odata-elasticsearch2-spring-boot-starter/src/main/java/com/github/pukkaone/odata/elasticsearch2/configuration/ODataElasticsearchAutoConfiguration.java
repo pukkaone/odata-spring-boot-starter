@@ -6,6 +6,11 @@ import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityPro
 import com.github.pukkaone.odata.elasticsearch2.processor.EntityRepository;
 import com.github.pukkaone.odata.elasticsearch2.provider.IndicesToCsdlSchemasMapper;
 import com.github.pukkaone.odata.elasticsearch2.provider.ElasticsearchEdmProvider;
+import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityCollectionProcessor;
+import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityProcessor;
+import com.github.pukkaone.odata.elasticsearch2.processor.EntityRepository;
+import com.github.pukkaone.odata.elasticsearch2.provider.ElasticsearchEdmProvider;
+import com.github.pukkaone.odata.elasticsearch2.provider.IndicesToCsdlSchemasMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -38,6 +43,13 @@ public class ODataElasticsearchAutoConfiguration {
   @Bean
   public EntityRepository entityRepository(ElasticsearchTemplate elasticsearchTemplate) {
     return new EntityRepository(elasticsearchTemplate);
+  }
+
+  @Bean
+  public ElasticsearchEntityCollectionProcessor elasticsearchEntityCollectionProcessor(
+      EntityRepository entityRepository) {
+
+    return new ElasticsearchEntityCollectionProcessor(entityRepository);
   }
 
   @Bean

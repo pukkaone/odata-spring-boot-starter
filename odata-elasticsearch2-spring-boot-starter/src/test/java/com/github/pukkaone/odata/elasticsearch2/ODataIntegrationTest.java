@@ -114,6 +114,8 @@ public class ODataIntegrationTest {
     waitForGreenStatus(INDEX_NAME);
 
     indexDocument("entityId1", "entity1-source.json");
+    indexDocument("entityId2", "entity2-source.json");
+    indexDocument("entityId3", "entity3-source.json");
 
     refresh(INDEX_NAME);
   }
@@ -159,5 +161,164 @@ public class ODataIntegrationTest {
 
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     assertEquals("entity1-expected.json", response.getBody());
+  }
+
+  @Test
+  public void should_find_all_entities() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathStringValue("$['@odata.context']")
+        .isEqualTo("$metadata#ExampleType");
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 20, 30);
+  }
+
+  @Test
+  public void should_filter_integer_property_and() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=integerProperty gt 19 and integerProperty lt 21"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(20);
+  }
+
+  @Test
+  public void should_filter_integer_property_eq() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=integerProperty eq 20"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(20);
+  }
+
+  @Test
+  public void should_filter_integer_property_ne() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=integerProperty ne 20"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 30);
+  }
+
+  @Test
+  public void should_filter_integer_property_or() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=integerProperty lt 19 or integerProperty gt 21"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 30);
+  }
+
+  @Test
+  public void should_filter_keyword_property_eq() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=keywordProperty eq 'alpha bravo'"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(20);
+  }
+
+  @Test
+  public void should_filter_keyword_property_ne() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=keywordProperty ne 'alpha bravo'"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 30);
+  }
+
+  @Test
+  public void should_filter_object_property_eq() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=objectProperty/objectTextProperty eq 'c'"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10);
+  }
+
+  @Test
+  public void should_filter_text_property_contains() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=contains(textProperty,'delta')"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(20);
+  }
+
+  @Test
+  public void should_filter_text_property_not_contains() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$filter=not contains(textProperty,'delta')"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 30);
+  }
+
+  @Test
+  public void should_order_by_multiple_properties() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$orderby=longProperty,textProperty desc"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 30, 20);
+  }
+
+  @Test
+  public void should_skip() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$skip=1"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(20, 30);
+  }
+
+  @Test
+  public void should_top() throws Exception {
+    ResponseEntity<JsonNode> response = testRestTemplate.getForEntity(
+        joinPathSegments("/ExampleType?$top=2"),
+        JsonNode.class);
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(json.write(response.getBody()))
+        .extractingJsonPathArrayValue("$.value[*].integerProperty")
+        .containsExactly(10, 20);
   }
 }
