@@ -1,4 +1,4 @@
-= OData Spring Boot Starter
+= OData Spring Boot Starter {nbsp}image:https://maven-badges.herokuapp.com/maven-central/com.github.pukkaone/odata-web-spring-boot-starter/badge.svg[Maven Central,link="https://maven-badges.herokuapp.com/maven-central/com.github.pukkaone/odata-web-spring-boot-starter"]
 
 Convenient dependency descriptors to add OData to your application.
 
