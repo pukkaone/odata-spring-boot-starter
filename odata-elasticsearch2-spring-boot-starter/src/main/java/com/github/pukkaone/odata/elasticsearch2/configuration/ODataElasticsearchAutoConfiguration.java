@@ -1,12 +1,9 @@
 package com.github.pukkaone.odata.elasticsearch2.configuration;
 
-import com.github.pukkaone.odata.elasticsearch2.provider.ElasticsearchEdmProviderResolver;
-import com.github.pukkaone.odata.elasticsearch2.provider.IndicesToCsdlSchemasMapper;
+import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityCollectionProcessor;
 import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityProcessor;
 import com.github.pukkaone.odata.elasticsearch2.processor.EntityRepository;
-import com.github.pukkaone.odata.elasticsearch2.processor.ElasticsearchEntityCollectionProcessor;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Value;
+import com.github.pukkaone.odata.elasticsearch2.provider.ElasticsearchEdmProviderResolver;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,18 +17,10 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 public class ODataElasticsearchAutoConfiguration {
 
   @Bean
-  public IndicesToCsdlSchemasMapper indicesToCsdlSchemasMapper(
-      ElasticsearchTemplate elasticsearchTemplate,
-      @Value("${odata.elasticsearch.indices:}") List<String> indices) {
-
-    return new IndicesToCsdlSchemasMapper(elasticsearchTemplate, indices);
-  }
-
-  @Bean
   public ElasticsearchEdmProviderResolver elasticsearchEdmProviderFactory(
-      IndicesToCsdlSchemasMapper indicesToCsdlSchemasMapper) {
+      ElasticsearchTemplate elasticsearchTemplate) {
 
-    return new ElasticsearchEdmProviderResolver(indicesToCsdlSchemasMapper);
+    return new ElasticsearchEdmProviderResolver(elasticsearchTemplate);
   }
 
   @Bean

@@ -23,10 +23,6 @@ Add this dependency to your Maven project:
 Set these application properties:
 [source,yaml]
 ----
-odata:
-  elasticsearch:
-    indices: COMMA_SEPARATED_LIST_OF_ALIAS_OR_INDEX_NAMES
-
 spring:
   data:
     elasticsearch:
@@ -39,10 +35,6 @@ spring:
 
 Various properties can be specified inside your `application.properties` or `application.yml` file,
 or as command line switches.
-
-`odata.elasticsearch.indices`::
-Comma separated list of alias or index names to expose at OData endpoint. +
-Default: all aliases and indices are exposed
 
 `odata.web.service-parent-path`::
 OData service root URI will be

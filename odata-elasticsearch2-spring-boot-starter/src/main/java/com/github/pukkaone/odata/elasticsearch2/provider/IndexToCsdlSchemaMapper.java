@@ -181,7 +181,6 @@ public class IndexToCsdlSchemaMapper {
    * @return schema
    */
   public CsdlSchema toSchema(String indexName, IndexMetaData indexMetaData) {
-
     schema = new CsdlSchema()
         .setNamespace(indexName);
     return schema.setEntityContainer(toEntityContainer(indexName, indexMetaData))
