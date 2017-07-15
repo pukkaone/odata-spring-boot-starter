@@ -24,7 +24,7 @@ subprojects {
 
   ext {
     olingoVersion = '4.3.0'
-    springBootVersion = '1.4.0.RELEASE'
+    springBootVersion = '1.5.4.RELEASE'
   }
 
   repositories {
@@ -32,7 +32,8 @@ subprojects {
     mavenCentral()
   }
 
-  sourceCompatibility = 1.8
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = sourceCompatibility
 
   dependencies {
     compile "org.apache.olingo:odata-server-core-ext:${olingoVersion}"

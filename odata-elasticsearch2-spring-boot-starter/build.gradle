@@ -4,6 +4,4 @@ dependencies {
   compile project(':odata-web-spring-boot-starter')
   compile "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
   runtime 'net.java.dev.jna:jna:4.1.0'
-  // Spring Boot 1.4.0 specifies a Jackson version that is incompatible with Elasticsearch 2.2.0
-  testCompile 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.8.7'
 }

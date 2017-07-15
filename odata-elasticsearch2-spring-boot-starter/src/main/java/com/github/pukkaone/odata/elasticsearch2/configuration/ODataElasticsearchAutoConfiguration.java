@@ -17,7 +17,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 public class ODataElasticsearchAutoConfiguration {
 
   @Bean
-  public ElasticsearchEdmProviderResolver elasticsearchEdmProviderFactory(
+  public ElasticsearchEdmProviderResolver elasticsearchEdmProviderResolver(
       ElasticsearchTemplate elasticsearchTemplate) {
 
     return new ElasticsearchEdmProviderResolver(elasticsearchTemplate);
