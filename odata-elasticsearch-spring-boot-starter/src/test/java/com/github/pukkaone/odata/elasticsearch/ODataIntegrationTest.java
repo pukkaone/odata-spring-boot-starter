@@ -133,13 +133,12 @@ public class ODataIntegrationTest {
 
   @Test
   public void should_get_metadata() throws Exception {
-    String metadata = testRestTemplate.getForObject(
+    JsonNode metadata = testRestTemplate.getForObject(
         joinPathSegments("/$metadata"),
-        String.class);
+        JsonNode.class);
 
-    String expected = StreamUtils.copyToString(
-        getClass().getResourceAsStream("metadata-expected.xml"), StandardCharsets.UTF_8);
-    assertThat(metadata).isXmlEqualTo(expected);
+    assertThat(json.write(metadata))
+        .isEqualToJson("metadata-expected.json", ODataIntegrationTest.class);
   }
 
   @Test

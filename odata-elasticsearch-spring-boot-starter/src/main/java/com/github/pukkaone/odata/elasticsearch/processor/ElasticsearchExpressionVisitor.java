@@ -108,6 +108,20 @@ public class ElasticsearchExpressionVisitor implements ExpressionVisitor<Object>
   }
 
   @Override
+  public Object visitBinaryOperator(
+      BinaryOperatorKind operator,
+      Object left,
+      List<Object> right) throws ExpressionVisitException, ODataApplicationException {
+
+    if (right.size() > 1) {
+      throw new NotImplementedException(
+          "visitBinaryOperator with more than 1 right operand not implemented");
+    }
+
+    return visitBinaryOperator(operator, left, right.get(0));
+  }
+
+  @Override
   public Object visitUnaryOperator(
       UnaryOperatorKind operator,
       Object operand) throws ExpressionVisitException, ODataApplicationException {

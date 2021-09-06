@@ -5,6 +5,6 @@ plugins {
 description = 'OData server endpoint starter'
 
 dependencies {
-  api 'org.apache.olingo:odata-server-core-ext:4.3.0'
+  api 'org.apache.olingo:odata-server-core-ext:4.8.0'
   api 'org.springframework.boot:spring-boot-starter-web'
 }

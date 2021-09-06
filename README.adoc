@@ -24,10 +24,9 @@ Set these application properties:
 [source,yaml]
 ----
 spring:
-  data:
-    elasticsearch:
-      cluster-name: CLUSTER_NAME
-      cluster-nodes: "NODE_HOST:NODE_PORT"
+  elasticsearch:
+    rest:
+      uris: ELASTICSEARCH_REST_API_URI
 ----
 
 
@@ -38,7 +37,7 @@ or as command line switches.
 
 `odata.web.service-parent-path`::
 OData service root URI will be
-`${server.context-path}${odata.web.service-parent-path}/` _alias_or_index_name_ +
+`${server.servlet.context-path}${odata.web.service-parent-path}/` _alias_or_index_name_ +
 Default: `/odata`
 
 

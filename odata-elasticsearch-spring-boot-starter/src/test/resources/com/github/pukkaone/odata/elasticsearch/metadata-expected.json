@@ -1,0 +1,83 @@
+{
+  "$Version": "4.01",
+  "customer": {
+    "customer": {
+      "$Kind": "EntityType",
+      "$Key": [
+        "_id"
+      ],
+      "binaryProperty": {
+        "$Type": "Edm.Binary"
+      },
+      "booleanProperty": {
+        "$Type": "Edm.Boolean"
+      },
+      "byteProperty": {
+        "$Type": "Edm.Byte"
+      },
+      "dateProperty": {
+        "$Type": "Edm.DateTimeOffset"
+      },
+      "doubleProperty": {
+        "$Type": "Edm.Double"
+      },
+      "floatProperty": {
+        "$Type": "Edm.Single"
+      },
+      "geoPointProperty": {
+        "$Type": "Edm.GeographyPoint"
+      },
+      "integerProperty": {
+        "$Type": "Edm.Int32"
+      },
+      "keywordProperty": {
+        "$Type": "Edm.String"
+      },
+      "longProperty": {
+        "$Type": "Edm.Int64"
+      },
+      "nestedProperty": {
+        "$Type": "customer.nestedProperty",
+        "$Collection": true
+      },
+      "objectProperty": {
+        "$Type": "customer.objectProperty"
+      },
+      "shortProperty": {
+        "$Type": "Edm.Int16"
+      },
+      "textProperty": {
+        "$Type": "Edm.String"
+      },
+      "_id": {
+        "$Type": "Edm.String",
+        "$Nullable": false
+      }
+    },
+    "nestedProperty": {
+      "$Kind": "ComplexType",
+      "nestedIntegerProperty": {
+        "$Type": "Edm.Int32"
+      },
+      "nestedTextProperty": {
+        "$Type": "Edm.String"
+      }
+    },
+    "objectProperty": {
+      "$Kind": "ComplexType",
+      "objectIntegerProperty": {
+        "$Type": "Edm.Int32"
+      },
+      "objectTextProperty": {
+        "$Type": "Edm.String"
+      }
+    },
+    "customer": {
+      "$Kind": "EntityContainer",
+      "customer": {
+        "$Kind": "EntitySet",
+        "$Type": "customer.customer"
+      }
+    }
+  }
+}
