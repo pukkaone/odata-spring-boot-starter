@@ -15,7 +15,7 @@ Add this dependency to your Maven project:
 ----
 <dependency>
   <groupId>com.github.pukkaone</groupId>
-  <artifactId>odata-elasticsearch2-spring-boot-starter</artifactId>
+  <artifactId>odata-elasticsearch-spring-boot-starter</artifactId>
   <version>${odata-spring-boot-starter.version}</version>
 </dependency>
 ----
@@ -59,13 +59,13 @@ Default: `/odata`
 | Entity Container
 | _alias_or_index_name_
 
-| type
+| alias/index
 | Entity Set
-| _type_name_
+| _alias_or_index_name_
 
-| type
+| alias/index
 | Entity Type
-| _Namespace_ `.` _type_name_
+| _Namespace_ `.` _alias_or_index_name_
 
 | nested
 | Collection(Complex Type)

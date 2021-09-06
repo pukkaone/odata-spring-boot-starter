@@ -1,9 +1,0 @@
-{
-  "@odata.context": "$metadata",
-  "value": [
-    {
-      "name": "ExampleType",
-      "url": "ExampleType"
-    }
-  ]
-}

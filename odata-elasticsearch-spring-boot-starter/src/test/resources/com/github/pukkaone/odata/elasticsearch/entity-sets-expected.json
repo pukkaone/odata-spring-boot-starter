@@ -1,0 +1,9 @@
+{
+  "@odata.context": "$metadata",
+  "value": [
+    {
+      "name": "customer",
+      "url": "customer"
+    }
+  ]
+}

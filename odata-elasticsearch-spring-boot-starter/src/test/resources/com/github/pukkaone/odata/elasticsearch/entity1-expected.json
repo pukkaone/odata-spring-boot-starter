@@ -1,0 +1,26 @@
+{
+  "@odata.context": "$metadata#customer/$entity",
+  "binaryProperty": "TWFu",
+  "booleanProperty": true,
+  "byteProperty": 1,
+  "dateProperty":"2017-12-31T00:00:00Z",
+  "doubleProperty": 2,
+  "floatProperty": 3,
+  "geoPointProperty": "geography'SRID=4326;Point(2.0 1.0)'",
+  "integerProperty": 10,
+  "keywordProperty": "a",
+  "longProperty": 5,
+  "nestedProperty": [
+    {
+      "nestedIntegerProperty": 6,
+      "nestedTextProperty": "b"
+    }
+  ],
+  "objectProperty": {
+    "objectIntegerProperty": 7,
+    "objectTextProperty": "c"
+  },
+  "shortProperty": 8,
+  "textProperty": "d",
+  "_id": "entityId1"
+}

@@ -1,0 +1,99 @@
+plugins {
+  id 'checkstyle'
+  id 'java-library'
+  id 'maven-publish'
+  id 'signing'
+}
+
+group = 'com.github.pukkaone'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+ext {
+  springBootVersion = '2.5.4'
+}
+
+dependencies {
+  annotationProcessor 'org.projectlombok:lombok'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+  api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+  compileOnly platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
+checkstyle {
+  toolVersion = '8.45.1'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+jar {
+  manifest {
+    attributes(
+        'Automatic-Module-Name': "${project.group}.${project.name}".replace('-', '.'),
+        'Implementation-Version': project.version)
+  }
+}
+
+publishing {
+  publications {
+    library(MavenPublication) {
+      from components.java
+      pom {
+        name = project.name
+        afterEvaluate {
+          description = project.description
+        }
+        url = 'https://github.com/pukkaone/odata-spring-boot-starter'
+
+        licenses {
+          license {
+            name = 'Apache License, Version 2.0'
+            url = 'https://www.apache.org/licenses/LICENSE-2.0'
+          }
+        }
+
+        developers {
+          developer {
+            id = 'pukkaone'
+            name = 'Chin Huang'
+          }
+        }
+
+        scm {
+          connection = 'scm:git:git@github.com:pukkaone/odata-spring-boot-starter.git'
+          developerConnection = 'scm:git:git@github.com:pukkaone/odata-spring-boot-starter.git'
+          url = 'https://github.com/pukkaone/odata-spring-boot-starter'
+        }
+      }
+    }
+  }
+
+  repositories {
+    maven {
+      url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+      credentials {
+        username = findProperty('sonatypeUsername') ?: 'UNKNOWN'
+        password = findProperty('sonatypePassword') ?: 'UNKNOWN'
+      }
+    }
+  }
+}
+
+signing {
+  required { hasProperty('sonatypeUsername') && hasProperty('sonatypePassword') }
+  sign publishing.publications.library
+}

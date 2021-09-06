@@ -1,5 +1,10 @@
-project.description = 'OData server endpoint starter'
+plugins {
+  id 'organization.library-convention'
+}
+
+description = 'OData server endpoint starter'
 
 dependencies {
-  compile "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+  api 'org.apache.olingo:odata-server-core-ext:4.3.0'
+  api 'org.springframework.boot:spring-boot-starter-web'
 }

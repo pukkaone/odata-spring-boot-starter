@@ -1,0 +1,68 @@
+{
+  "settings": {
+    "number_of_replicas": 0,
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "binaryProperty": {
+        "type": "binary"
+      },
+      "booleanProperty": {
+        "type": "boolean"
+      },
+      "byteProperty": {
+        "type": "byte"
+      },
+      "dateProperty": {
+        "type": "date"
+      },
+      "doubleProperty": {
+        "type": "double"
+      },
+      "floatProperty": {
+        "type": "float"
+      },
+      "geoPointProperty": {
+        "type": "geo_point"
+      },
+      "integerProperty": {
+        "type": "integer"
+      },
+      "keywordProperty": {
+        "type": "keyword"
+      },
+      "longProperty": {
+        "type": "long"
+      },
+      "nestedProperty": {
+        "type": "nested",
+        "properties": {
+          "nestedIntegerProperty": {
+            "type": "integer"
+          },
+          "nestedTextProperty": {
+            "type": "text"
+          }
+        }
+      },
+      "objectProperty": {
+        "type": "object",
+        "properties": {
+          "objectIntegerProperty": {
+            "type": "integer"
+          },
+          "objectTextProperty": {
+            "type": "text"
+          }
+        }
+      },
+      "shortProperty": {
+        "type": "short"
+      },
+      "textProperty": {
+        "type": "text"
+      }
+    }
+  }
+}

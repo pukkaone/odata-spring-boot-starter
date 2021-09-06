@@ -1,0 +1,11 @@
+plugins {
+  id 'organization.library-convention'
+}
+
+description = 'OData server implementation backed by Elasticsearch starter'
+
+dependencies {
+  implementation project(':odata-web-spring-boot-starter')
+  implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+  testImplementation 'org.testcontainers:elasticsearch:1.15.3'
+}

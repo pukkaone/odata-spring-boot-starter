@@ -1,7 +1,0 @@
-project.description = 'OData server implementation backed by Elasticsearch starter'
-
-dependencies {
-  compile project(':odata-web-spring-boot-starter')
-  compile "org.springframework.boot:spring-boot-starter-data-elasticsearch:${springBootVersion}"
-  runtime 'net.java.dev.jna:jna:4.1.0'
-}

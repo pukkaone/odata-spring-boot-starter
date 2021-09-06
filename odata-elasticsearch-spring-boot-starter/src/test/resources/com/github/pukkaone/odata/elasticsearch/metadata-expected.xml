@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="customer">
+      <EntityType Name="customer">
+        <Key>
+          <PropertyRef Name="_id"/>
+        </Key>
+        <Property Name="binaryProperty" Type="Edm.Binary"/>
+        <Property Name="booleanProperty" Type="Edm.Boolean"/>
+        <Property Name="byteProperty" Type="Edm.Byte"/>
+        <Property Name="dateProperty" Type="Edm.DateTimeOffset"/>
+        <Property Name="doubleProperty" Type="Edm.Double"/>
+        <Property Name="floatProperty" Type="Edm.Single"/>
+        <Property Name="geoPointProperty" Type="Edm.GeographyPoint"/>
+        <Property Name="integerProperty" Type="Edm.Int32"/>
+        <Property Name="keywordProperty" Type="Edm.String"/>
+        <Property Name="longProperty" Type="Edm.Int64"/>
+        <Property Name="nestedProperty" Type="Collection(customer.nestedProperty)"/>
+        <Property Name="objectProperty" Type="customer.objectProperty"/>
+        <Property Name="shortProperty" Type="Edm.Int16"/>
+        <Property Name="textProperty" Type="Edm.String"/>
+        <Property Name="_id" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+      <ComplexType Name="nestedProperty">
+        <Property Name="nestedIntegerProperty" Type="Edm.Int32"/>
+        <Property Name="nestedTextProperty" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="objectProperty">
+        <Property Name="objectIntegerProperty" Type="Edm.Int32"/>
+        <Property Name="objectTextProperty" Type="Edm.String"/>
+      </ComplexType>
+      <EntityContainer Name="customer">
+        <EntitySet Name="customer" EntityType="customer.customer"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
