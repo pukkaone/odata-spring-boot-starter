@@ -137,8 +137,7 @@ public class ODataIntegrationTest {
         joinPathSegments("/$metadata"),
         JsonNode.class);
 
-    assertThat(json.write(metadata))
-        .isEqualToJson("metadata-expected.json", ODataIntegrationTest.class);
+    assertEquals("metadata-expected.json", metadata);
   }
 
   @Test

@@ -72,7 +72,7 @@
         "$Type": "Edm.String"
       }
     },
-    "customer": {
+    "customerContainer": {
       "$Kind": "EntityContainer",
       "customer": {
         "$Kind": "EntitySet",

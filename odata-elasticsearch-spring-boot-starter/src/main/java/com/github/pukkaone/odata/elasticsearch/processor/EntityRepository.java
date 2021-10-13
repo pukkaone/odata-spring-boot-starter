@@ -58,7 +58,7 @@ public class EntityRepository {
   private final RestHighLevelClient elasticsearchClient;
 
   private String toIndexName(EdmEntitySet entitySet) {
-    return entitySet.getEntityContainer().getName();
+    return entitySet.getName();
   }
 
   private static ComplexValue toComplexValue(

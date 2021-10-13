@@ -173,7 +173,7 @@ public class IndexToCsdlSchemaMapper {
 
   private CsdlEntityContainer toEntityContainer(Index index) {
     return new CsdlEntityContainer()
-        .setName(index.getName())
+        .setName(index.getName() + "Container")
         .setEntitySets(toEntitySets(index));
   }
 
